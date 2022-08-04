@@ -1,0 +1,35 @@
+
+version: "3"
+services:
+  mysqldb:
+    platform: linux/x86_64
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=foodb
+    ports:
+      - "3306:3306"
+    volumes:
+      - data:/data
+  mtd-sql:
+    image: mtd-mysql
+    container_name: mtd-mysql-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - mysqldb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/foodb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+volumes:
+  data: {}
+
+
+
+
+
