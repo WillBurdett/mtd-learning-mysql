@@ -41,5 +41,4 @@ public class FooController {
     public void updateFoo(@PathVariable String name, @RequestBody Foo foo){
         fooService.updateFoo(name, foo);
     }
-    // get swagger JSON from swagger-api.html to include new methods
 }

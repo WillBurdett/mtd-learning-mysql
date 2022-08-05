@@ -12,11 +12,8 @@ services:
     volumes:
       - data:/data
   mtd-sql:
-    image: mtd-mysql
+    image: mtd-sql:latest
     container_name: mtd-mysql-app
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     restart: always
