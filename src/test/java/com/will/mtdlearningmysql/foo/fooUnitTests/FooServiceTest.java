@@ -43,9 +43,6 @@ public class FooServiceTest {
         // then
         verify(fooRepository, times(1)).findAll();
         assertThat(actual).isEqualTo(expected);
-
-
-
     }
 
     @Test
