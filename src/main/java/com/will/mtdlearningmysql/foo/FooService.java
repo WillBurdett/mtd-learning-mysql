@@ -1,6 +1,7 @@
 package com.will.mtdlearningmysql.foo;
 
 import com.will.mtdlearningmysql.exceptions.FooNotFound;
+import com.will.mtdlearningmysql.exceptions.NegativeLegNum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class FooService {
     }
 
     public void addFoo(Foo foo) {
+        if (isNegative(foo.getLegs())){
+            throw new NegativeLegNum("cannot have negative leg number");
+        }
         fooRepository.save(foo);
     }
 
@@ -54,5 +58,8 @@ public class FooService {
         } else {
             throw new FooNotFound(name + " not found");
         }
+    }
+    public Boolean isNegative(Integer legNum){
+        return legNum < 0;
     }
 }
