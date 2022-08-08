@@ -73,15 +73,41 @@ public class FooServiceTest {
     }
 
     @Test
-    public void addFoo() {
+    public void addFoo_AddsFooWhenRequestOK() {
+        // given
+        Foo bob = new Foo("bob", 1, true);
+
+        // when
+        fooService.addFoo(bob);
+
+        // then
+        verify(fooRepository, times(1)).save(bob);
     }
 
     @Test
-    public void deleteFooByName() {
+    public void deleteFooByName_WhenFooExists() {
+        // given
+        Foo bob = new Foo("bob", 1, true);
+        when(fooRepository.findById("bob")).thenReturn(Optional.of(bob));
+
+        // when
+        fooService.deleteFooByName("bob");
+
+        // then
+        verify(fooRepository, times(1)).deleteById("bob");
     }
 
     @Test
-    public void updateFoo() {
+    public void updateFoo_WhenFooExists() {
+        // given
+        Foo bob = new Foo("bob", 1, true);
+        when(fooRepository.findById("bob")).thenReturn(Optional.of(bob));
+
+        // when
+        fooService.updateFoo("bob", bob);
+
+        // then
+        verify(fooRepository, times(1)).save(bob);
     }
 
     @Test
