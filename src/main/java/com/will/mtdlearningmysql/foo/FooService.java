@@ -67,6 +67,6 @@ public class FooService {
     }
 
     public Boolean isEmptyString(String name){
-        return name.trim() == "";
+        return name.trim().equals("");
     }
 }
