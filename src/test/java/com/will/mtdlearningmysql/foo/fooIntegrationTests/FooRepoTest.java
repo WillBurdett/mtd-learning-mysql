@@ -6,10 +6,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,6 +44,7 @@ public class FooRepoTest {
     void tearDown(){
         fooRepository.deleteAll();
     }
+
     @Test
     public void findByName_thenReturnEmployee() {
         // given
@@ -83,5 +87,33 @@ public class FooRepoTest {
 
         // then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteByName_DeletesFoo() {
+        // given
+        Foo bob = new Foo("bob", 2, false);
+        entityManager.persist(bob);
+        entityManager.flush();
+
+        // when
+        fooRepository.deleteById("bob");
+
+        // then
+        assertThat(fooRepository.findById("bob")).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void UpdateByName_UpdatesFoo() {
+        // given
+        Foo bob = new Foo("bob", 2, false);
+        entityManager.persist(bob);
+        entityManager.flush();
+
+        // when
+        bob.setName("updated");
+
+        // then
+        assertThat(fooRepository.findById("bob").get().getName()).isEqualTo("updated");
     }
 }
