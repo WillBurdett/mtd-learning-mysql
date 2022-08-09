@@ -9,5 +9,4 @@ class MtdLearningMysqlApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

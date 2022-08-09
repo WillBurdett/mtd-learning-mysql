@@ -2,31 +2,20 @@ package com.will.mtdlearningmysql.foo.fooIntegrationTests;
 
 import com.will.mtdlearningmysql.foo.Foo;
 import com.will.mtdlearningmysql.foo.FooRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.After;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @RunWith(SpringRunner.class)
@@ -40,8 +29,8 @@ public class FooRepoTest {
     private FooRepository fooRepository;
 
     // write test cases here
-    @AfterEach
-    void tearDown(){
+    @After
+    public void tearDown(){
         fooRepository.deleteAll();
     }
 
@@ -111,9 +100,9 @@ public class FooRepoTest {
         entityManager.flush();
 
         // when
-        bob.setName("updated");
+        bob.setLegs(10);
 
         // then
-        assertThat(fooRepository.findById("bob").get().getName()).isEqualTo("updated");
+        assertThat(fooRepository.findById("bob").get().getLegs()).isEqualTo(10);
     }
 }
