@@ -4,13 +4,16 @@ import com.will.mtdlearningmysql.exceptions.FooNotFound;
 import com.will.mtdlearningmysql.foo.Foo;
 import com.will.mtdlearningmysql.foo.FooRepository;
 import com.will.mtdlearningmysql.foo.FooService;
+import org.junit.After;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
+@AutoConfigureTestEntityManager
+@Transactional
 @SpringBootTest
 public class FooServiceTest{
 
@@ -26,11 +31,13 @@ public class FooServiceTest{
     FooService fooService;
 
     @Autowired
+    TestEntityManager entityManager;
+
+    @Autowired
     private FooRepository fooRepository;
 
-    // write test cases here
-    @AfterEach
-    void tearDown(){
+    @After
+    public void tearDown(){
         fooRepository.deleteAll();
     }
 
@@ -38,13 +45,12 @@ public class FooServiceTest{
     public void getsAllFoo(){
         // given
         Foo bob = new Foo("bob", 2, false);
-        Foo sam = new Foo("sam", 2, false);
-        fooService.addFoo(bob);
-        fooService.addFoo(sam);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
         List<Foo> actual = fooService.getAllFoo();
-        List <Foo> expected = Arrays.asList(bob, sam);
+        List <Foo> expected = Arrays.asList(bob);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -54,7 +60,8 @@ public class FooServiceTest{
     public void getFooByName_ReturnsFooWhenExists(){
         // given
         Foo bob = new Foo("bob", 2, false);
-        fooService.addFoo(bob);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
         Optional<Foo> actual = fooService.getFooByName(bob.getName());
@@ -66,27 +73,29 @@ public class FooServiceTest{
 
     @Test
     public void  getFooByName_ThrowsFooNotFoundWhenFooDoesNotExist(){
-        //given
-        Foo sam = new Foo("sam", 2, false);
-        fooService.addFoo(sam);
+        // given
+        Foo bob = new Foo("bob", 2, false);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
         assertThatThrownBy(() -> {
-            fooService.getFooByName("bob");
+            fooService.getFooByName("doesnotexist");
             // then
         }).isInstanceOf(FooNotFound.class)
-                .hasMessage("bob not found");
+                .hasMessage("doesnotexist not found");
     }
 
     @Test
     public void addsFoo_WhenReqOK() {
-        //given
-        Foo sam = new Foo("sam", 2, false);
-        fooService.addFoo(sam);
+        // given
+        Foo bob = new Foo("bob", 2, false);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
-        Optional<Foo> actual = fooService.getFooByName(sam.getName());
-        Optional<Foo> expected = Optional.of(sam);
+        Optional<Foo> actual = fooService.getFooByName(bob.getName());
+        Optional<Foo> expected = Optional.of(bob);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -96,12 +105,12 @@ public class FooServiceTest{
     public void updatesFooByName_WhenFooExists(){
         // given
         Foo bob = new Foo("bob", 2, false);
-        fooService.addFoo(bob);
+        Foo bobUpdated = new Foo("bob", 1, false);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
-        Foo bobUpdated = new Foo("bob", 1, false);
         fooService.updateFoo("bob", bobUpdated);
-
         Optional<Foo> actual = fooService.getFooByName("bob");
         Optional<Foo> expected = Optional.of(bobUpdated);
 
@@ -113,7 +122,8 @@ public class FooServiceTest{
     public void deletesFooByName_WhenFooExists(){
         // given
         Foo bob = new Foo("bob", 2, false);
-        fooService.addFoo(bob);
+        entityManager.persist(bob);
+        entityManager.flush();
 
         // when
         fooService.deleteFooByName("bob");
