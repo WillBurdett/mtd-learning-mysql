@@ -1,6 +1,7 @@
 package com.will.mtdlearningmysql.foo.fooUnitTests;
 
 
+import com.will.mtdlearningmysql.exceptions.FooNotFound;
 import com.will.mtdlearningmysql.foo.Foo;
 import com.will.mtdlearningmysql.foo.FooRepository;
 import com.will.mtdlearningmysql.foo.FooService;
@@ -68,7 +69,7 @@ public class FooServiceTest {
         assertThatThrownBy(() -> {
             fooService.getFooByName("bob");
             // then
-        }).isInstanceOf(IllegalStateException.class)
+        }).isInstanceOf(FooNotFound.class)
                 .hasMessage("bob not found");
     }
 
