@@ -8,6 +8,8 @@ After cloning the project, in the project root directory run the following comma
 - docker build --tag=mtd-sql:latest .
 - docker-compose up
 
+To stop, hit control+'C'
+
 Currect endpoints you can test:
 - GET - returns all foo
 - GET - returns the first foo with a given name
