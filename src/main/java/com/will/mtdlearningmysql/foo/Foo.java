@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 
@@ -20,6 +22,8 @@ public class Foo {
             nullable = false,
             name = "legs"
     )
+    @Max(value = 100)
+    @Min(value = 0)
     private Integer legs;
     @Column(
             nullable = false,
