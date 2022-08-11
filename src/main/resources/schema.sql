@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS foo (
   name VARCHAR(255) NOT NULL,
   can_fly BIT(1) NOT NULL,
   legs INT NOT NULL,
-  PRIMARY KEY (name)
+  PRIMARY KEY (name),
+  CHECK (legs>=0)
 );
