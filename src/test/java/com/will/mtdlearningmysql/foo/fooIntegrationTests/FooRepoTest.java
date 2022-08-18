@@ -35,7 +35,7 @@ public class FooRepoTest {
     }
 
     @Test
-    public void findByName_thenReturnEmployee() {
+    public void findByName_thenReturnFoo() {
         // given
         Foo bob = new Foo("bob", 2, false);
         entityManager.persist(bob);
