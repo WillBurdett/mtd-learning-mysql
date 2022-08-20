@@ -101,6 +101,7 @@ public class FooRepoTest {
 
         // when
         bob.setLegs(10);
+        fooRepository.save(bob);
 
         // then
         assertThat(fooRepository.findById("bob").get().getLegs()).isEqualTo(10);
